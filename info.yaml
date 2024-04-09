@@ -19,6 +19,7 @@ project:
     - "block.v"
     - "qr.v"
     - "state.v"
+    - "base.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 pinout:
