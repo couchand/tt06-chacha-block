@@ -12,7 +12,7 @@ module block (
 
   localparam STATE_COPY = 1;
   localparam STATE_CALC = 2;
-  localparam STATE_FLUSH = 3;
+  localparam STATE_SUM = 3;
   localparam STATE_READY = 0;
 
   reg [1:0] state;
@@ -20,7 +20,7 @@ module block (
   assign ready = !write & (state == STATE_READY);
   wire copying = !write & (state == STATE_COPY);
   wire calculating = !write & (state == STATE_CALC);
-  wire flushing = !write & (state == STATE_FLUSH);
+  wire summing = !write & (state == STATE_SUM);
 
   reg [7:0] counter;
 
@@ -73,7 +73,7 @@ module block (
     .c_out(c_rd),
     .d_out(d_rd),
     .wr_all(copying),
-    .wr_add(flushing),
+    .wr_add(summing),
     .s0_in(s0),
     .s1_in(s1),
     .s2_in(s2),
@@ -118,9 +118,9 @@ module block (
     end else if (calculating) begin
       counter <= counter + 1;
       if ((counter + 1) == (20 << 3)) begin
-        state <= STATE_FLUSH;
+        state <= STATE_SUM;
       end
-    end else if (flushing) begin
+    end else if (summing) begin
       state <= STATE_READY;
     end
   end
