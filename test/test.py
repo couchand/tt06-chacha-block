@@ -59,4 +59,6 @@ async def test_project(dut):
     await ClockCycles(dut.clk, 1)
     assert dut.uo_out.value == expected
 
+  await ClockCycles(dut.clk, 10)
   dut._log.info("Done!")
+  await ClockCycles(dut.clk, 10)

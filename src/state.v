@@ -36,6 +36,7 @@ module chacha_state (
   input wire [31:0] s15_in,
 
   input wire read,
+  output reg done,
   output wire [7:0] data_out
 );
   reg [31:0] s_out[15:0];
@@ -87,6 +88,7 @@ module chacha_state (
 
   always @(posedge clk) begin
     if (!rst_n) begin
+      done <= 0;
       addr_counter <= 0;
       for (int i = 0; i < 16; i++) begin
         s_out[i] <= 32'b0;
@@ -175,8 +177,9 @@ module chacha_state (
           end
         end
       end
-    end else if (read) begin
+    end else if (read & !done) begin
       addr_counter <= addr_counter + 1;
+      done <= (addr_counter + 6'b1) == 6'b0;
     end
   end
 

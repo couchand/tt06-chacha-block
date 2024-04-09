@@ -14,8 +14,9 @@ module block (
   localparam STATE_CALC = 2;
   localparam STATE_SUM = 3;
   localparam STATE_READY = 0;
+  localparam STATE_INC = 4;
 
-  reg [1:0] state;
+  reg [2:0] state;
 
   assign ready = !write & (state == STATE_READY);
   wire copying = !write & (state == STATE_COPY);
@@ -34,6 +35,8 @@ module block (
   wire [31:0] a_wr, b_wr, c_wr, d_wr;
 
   wire [31:0] s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15;
+
+  wire done;
 
   chacha_base block_base (
     .clk(clk),
@@ -91,6 +94,7 @@ module block (
     .s14_in(s14),
     .s15_in(s15),
     .read(read),
+    .done(done),
     .data_out(data_out)
   );
 
@@ -122,6 +126,8 @@ module block (
       end
     end else if (summing) begin
       state <= STATE_READY;
+    end else if (done) begin
+      state <= STATE_INC;
     end
   end
 
