@@ -24,7 +24,7 @@ module tt_um_couchand_chacha_block (
     .rst_n(rst_n),
     .data_in(ui_in),
     .data_out(uo_out),
-    .addr_in(uio_in[5:0]),
+    .read(uio_in[0]),
     .write(uio_in[6]),
     .ready(uio_out[7])
   );

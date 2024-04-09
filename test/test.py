@@ -35,7 +35,7 @@ async def test_project(dut):
   dut._log.info("Input initial state")
   for idx, byte in enumerate(initial_state):
     dut.ui_in.value = byte
-    dut.uio_in.value = 64 | idx
+    dut.uio_in.value = 64
     await ClockCycles(dut.clk, 1)
 
   dut.uio_in.value = 0
@@ -54,11 +54,9 @@ async def test_project(dut):
     0x6a, 0x43, 0xb8, 0xf4, 0x15, 0x18, 0xa1, 0x1c, 0xc3, 0x87, 0xb6, 0x69, 0xb2, 0xee, 0x65, 0x86,
   ]
 
-  carry = 0
-
+  dut.uio_in.value = 1
   for idx, expected in enumerate(expected_state):
-    dut.uio_in.value = idx
-    await ClockCycles(dut.clk, 2)
+    await ClockCycles(dut.clk, 1)
     assert dut.uo_out.value == expected
 
   dut._log.info("Done!")

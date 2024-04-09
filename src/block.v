@@ -5,8 +5,8 @@ module block (
   input wire rst_n,
   input wire [7:0] data_in,
   output wire [7:0] data_out,
-  input wire [5:0] addr_in,
   input wire write,
+  input wire read,
   output wire ready
 );
 
@@ -90,7 +90,7 @@ module block (
     .s13_in(s13),
     .s14_in(s14),
     .s15_in(s15),
-    .addr_in(addr_in),
+    .read(read),
     .data_out(data_out)
   );
 
