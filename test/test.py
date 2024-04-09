@@ -56,7 +56,7 @@ async def test_project(dut):
 
   for idx, expected in enumerate(expected_state):
     dut.uio_in.value = idx
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 2)
     byte = (dut.uo_out.value + initial_state[idx]) % 256
     if byte != expected:
       dut._log.info(f'{idx}:')

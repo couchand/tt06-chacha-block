@@ -1,25 +1,25 @@
 [*]
-[*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
-[*] Mon Nov 20 16:00:28 2023
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Tue Apr  9 18:13:02 2024
 [*]
-[dumpfile] "/home/uri/p/tt-new-template-proto/test/tb.vcd"
-[dumpfile_mtime] "Mon Nov 20 15:58:34 2023"
-[dumpfile_size] 1110
-[savefile] "/home/uri/p/tt-new-template-proto/test/tb.gtkw"
-[timestart] 0
-[size] 1376 600
+[dumpfile] "/home/couch/dev/personal/chacha-silicon/tt06-chacha-block/test/tb.vcd"
+[dumpfile_mtime] "Tue Apr  9 18:06:42 2024"
+[dumpfile_size] 248336
+[savefile] "/home/couch/dev/personal/chacha-silicon/tt06-chacha-block/test/tb.gtkw"
+[timestart] 796200000
+[size] 1850 1016
 [pos] -1 -1
-*-24.534533 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-24.534533 833000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb.
+[treeopen] tb.user_project.
+[treeopen] tb.user_project.block_instance.
 [sst_width] 297
-[signals_width] 230
+[signals_width] 352
 [sst_expanded] 1
-[sst_vpaned_height] 158
+[sst_vpaned_height] 327
 @28
 tb.user_project.ena
-@29
 tb.user_project.clk
-@28
 tb.user_project.rst_n
 @200
 -Inputs
@@ -35,5 +35,129 @@ tb.user_project.uio_out[7:0]
 -Output Pins
 @22
 tb.user_project.uo_out[7:0]
+tb.user_project.block_instance.addr_in[5:0]
+@28
+tb.user_project.block_instance.write
+tb.user_project.block_instance.ready
+@22
+tb.user_project.block_instance.counter[7:0]
+[color] 1
+tb.user_project.block_instance.round[4:0]
+@29
+[color] 1
+tb.user_project.block_instance.round_sel
+@24
+[color] 1
+tb.user_project.block_instance.quarter_round_sel[1:0]
+@28
+[color] 1
+tb.user_project.block_instance.eighth_round_sel
+@22
+tb.user_project.block_instance.data_in[7:0]
+tb.user_project.block_instance.data_out[7:0]
+@28
+tb.user_project.block_instance.block_state.clk
+@22
+[color] 5
+tb.user_project.block_instance.a_rd[31:0]
+[color] 5
+tb.user_project.block_instance.b_rd[31:0]
+[color] 3
+tb.user_project.block_instance.block_qr.a_plus_b[31:0]
+[color] 5
+tb.user_project.block_instance.d_rd[31:0]
+[color] 3
+tb.user_project.block_instance.block_qr.d_xor_apb[31:0]
+[color] 2
+tb.user_project.block_instance.block_qr.dxa_rotl_8[31:0]
+[color] 2
+tb.user_project.block_instance.block_qr.dxa_rotl_16[31:0]
+[color] 3
+tb.user_project.block_instance.block_qr.dxa_rotl[31:0]
+[color] 5
+tb.user_project.block_instance.c_rd[31:0]
+[color] 3
+tb.user_project.block_instance.block_qr.c_plus_d[31:0]
+[color] 3
+tb.user_project.block_instance.block_qr.b_xor_cpd[31:0]
+@c00022
+[color] 2
+tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+@28
+(0)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(1)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(2)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(3)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(4)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(5)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(6)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(7)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(8)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(9)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(10)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(11)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(12)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(13)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(14)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(15)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(16)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(17)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(18)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(19)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(20)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(21)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(22)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(23)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(24)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(25)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(26)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(27)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(28)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(29)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(30)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+(31)tb.user_project.block_instance.block_qr.bxc_rotl_7[31:0]
+@1401200
+-group_end
+@22
+[color] 2
+tb.user_project.block_instance.block_qr.bxc_rotl_12[31:0]
+[color] 3
+tb.user_project.block_instance.block_qr.bxc_rotl[31:0]
+tb.user_project.block_instance.a_wr[31:0]
+tb.user_project.block_instance.b_wr[31:0]
+tb.user_project.block_instance.c_wr[31:0]
+tb.user_project.block_instance.d_wr[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.a0[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.a1[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.a2[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.a3[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.b0[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.b1[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.b2[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.b3[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.c0[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.c1[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.c2[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.c3[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.d0[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.d1[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.d2[31:0]
+[color] 6
+tb.user_project.block_instance.block_state.d3[31:0]
 [pattern_trace] 1
 [pattern_trace] 0
