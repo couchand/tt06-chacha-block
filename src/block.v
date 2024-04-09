@@ -7,10 +7,21 @@ module block (
   output wire [7:0] data_out,
   input wire [5:0] addr_in,
   input wire write,
-  output reg ready
+  output wire ready
 );
 
-  reg copied;
+  localparam STATE_COPY = 1;
+  localparam STATE_CALC = 2;
+  localparam STATE_FLUSH = 3;
+  localparam STATE_READY = 0;
+
+  reg [1:0] state;
+
+  assign ready = !write & (state == STATE_READY);
+  wire copying = !write & (state == STATE_COPY);
+  wire calculating = !write & (state == STATE_CALC);
+  wire flushing = !write & (state == STATE_FLUSH);
+
   reg [7:0] counter;
 
   wire [4:0] round = counter[7:3];
@@ -21,9 +32,6 @@ module block (
 
   wire [31:0] a_rd, b_rd, c_rd, d_rd;
   wire [31:0] a_wr, b_wr, c_wr, d_wr;
-
-  wire copying = !ready & !write & !copied;
-  wire calculating = !ready & !write & copied;
 
   wire [31:0] s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15;
 
@@ -66,6 +74,7 @@ module block (
     .c_out(c_rd),
     .d_out(d_rd),
     .wr_all(copying),
+    .wr_add(flushing),
     .s0_in(s0),
     .s1_in(s1),
     .s2_in(s2),
@@ -100,17 +109,20 @@ module block (
 
   always @(posedge clk) begin
     if (!rst_n) begin
-      ready <= 1;
+      state <= STATE_READY;
       counter <= 0;
-      copied <= 0;
     end else if (write) begin
-      ready <= 0;
+      state <= STATE_COPY;
       counter <= 0;
     end else if (copying) begin
-      copied <= 1;
+      state <= STATE_CALC;
     end else if (calculating) begin
       counter <= counter + 1;
-      ready <= (counter + 1) == (20 << 3);
+      if ((counter + 1) == (20 << 3)) begin
+        state <= STATE_FLUSH;
+      end
+    end else if (flushing) begin
+      state <= STATE_READY;
     end
   end
 

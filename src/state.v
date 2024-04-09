@@ -17,6 +17,7 @@ module chacha_state (
   output wire [31:0] d_out,
 
   input wire wr_all,
+  input wire wr_add,
   input wire [31:0] s0_in,
   input wire [31:0] s1_in,
   input wire [31:0] s2_in,
@@ -104,6 +105,23 @@ module chacha_state (
       s_out[13] <= s13_in;
       s_out[14] <= s14_in;
       s_out[15] <= s15_in;
+    end else if (wr_add) begin
+      s_out[0] <= s_out[0] + s0_in;
+      s_out[1] <= s_out[1] + s1_in;
+      s_out[2] <= s_out[2] + s2_in;
+      s_out[3] <= s_out[3] + s3_in;
+      s_out[4] <= s_out[4] + s4_in;
+      s_out[5] <= s_out[5] + s5_in;
+      s_out[6] <= s_out[6] + s6_in;
+      s_out[7] <= s_out[7] + s7_in;
+      s_out[8] <= s_out[8] + s8_in;
+      s_out[9] <= s_out[9] + s9_in;
+      s_out[10] <= s_out[10] + s10_in;
+      s_out[11] <= s_out[11] + s11_in;
+      s_out[12] <= s_out[12] + s12_in;
+      s_out[13] <= s_out[13] + s13_in;
+      s_out[14] <= s_out[14] + s14_in;
+      s_out[15] <= s_out[15] + s15_in;
     end else if (wr_qr) begin
       if (!qr_sel[1]) begin
         if (!qr_sel[0]) begin
