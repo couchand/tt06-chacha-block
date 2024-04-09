@@ -39,7 +39,6 @@ module block (
     .clk(clk),
     .rst_n(rst_n),
     .wr(write),
-    .addr_in(addr_in),
     .data_in(data_in),
     .s0(s0),
     .s1(s1),
