@@ -54,14 +54,15 @@ async def test_project(dut):
     0x6a, 0x43, 0xb8, 0xf4, 0x15, 0x18, 0xa1, 0x1c, 0xc3, 0x87, 0xb6, 0x69, 0xb2, 0xee, 0x65, 0x86,
   ]
 
+  carry = 0
+
   for idx, expected in enumerate(expected_state):
     dut.uio_in.value = idx
     await ClockCycles(dut.clk, 2)
-    byte = (dut.uo_out.value + initial_state[idx]) % 256
-    if byte != expected:
-      dut._log.info(f'{idx}:')
-      dut._log.info(f'v {dut.uo_out.value} i {initial_state[idx]}')
-      dut._log.info(f'b {byte} x {expected}')
-    #assert byte == expected
+    curr_val = dut.uo_out.value
+    init_val = initial_state[idx]
+    byte = (curr_val + init_val + carry) % 256
+    carry = (curr_val + init_val) >> 8 if idx % 4 == 0 else 0
+    assert byte == expected
 
   dut._log.info("Done!")
