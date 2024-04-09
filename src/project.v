@@ -16,9 +16,17 @@ module tt_um_couchand_chacha_block (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-  // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
-  assign uio_out = 0;
-  assign uio_oe  = 0;
+  assign uio_out[6:0] = 0;
+  assign uio_oe  = 8'b10000000;
+
+  block block_instance (
+    .clk(clk),
+    .rst_n(rst_n),
+    .data_in(ui_in),
+    .data_out(uo_out),
+    .addr_in(uio_in[5:0]),
+    .write(uio_in[6]),
+    .ready(uio_out[7])
+  );
 
 endmodule
