@@ -4,7 +4,7 @@ module block (
   input wire clk,
   input wire rst_n,
   input wire [7:0] data_in,
-  input wire [7:0] data_out,
+  output wire [7:0] data_out,
   input wire [5:0] addr_in,
   input wire write,
   output reg ready
