@@ -18,16 +18,15 @@ module chacha_state (
   output wire [31:0] d_out,
 
   input wire read,
+  input wire [5:0] addr_in,
   output reg done,
   output wire [7:0] data_out
 );
   reg [31:0] s_out[15:0];
 
-  reg [5:0] addr_counter;
-
-  wire [3:0] addr_word = addr_counter[5:2];
-  wire addr_half = addr_counter[1];
-  wire addr_byte = addr_counter[0];
+  wire [3:0] addr_word = addr_in[5:2];
+  wire addr_half = addr_in[1];
+  wire addr_byte = addr_in[0];
 
   wire [31:0] current_word = s_out[addr_word];
   assign data_out = addr_half
@@ -71,7 +70,6 @@ module chacha_state (
   always @(posedge clk) begin
     if (!rst_n) begin
       done <= 0;
-      addr_counter <= 0;
       for (int i = 0; i < 16; i++) begin
         s_out[i] <= 32'b0;
       end
@@ -126,8 +124,7 @@ module chacha_state (
         end
       end
     end else if (read & !done) begin
-      addr_counter <= addr_counter + 1;
-      done <= (addr_counter + 6'b1) == 6'b0;
+      done <= (addr_in + 6'b1) == 6'b0;
     end
   end
 

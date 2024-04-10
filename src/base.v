@@ -5,6 +5,7 @@ module chacha_base (
   input wire rst_n,
 
   input wire wr,
+  input wire [5:0] addr_in,
   input wire [7:0] data_in,
 
   input wire [1:0] qr_sel,
@@ -31,20 +32,16 @@ module chacha_base (
     ? (qr_sel[0] ? s[15] : s[14])
     : (qr_sel[0] ? s[13] : s[12]);
 
-  reg [5:0] addr_counter;
-
-  wire [3:0] addr_word = addr_counter[5:2];
-  wire addr_half = addr_counter[1];
-  wire addr_byte = addr_counter[0];
+  wire [3:0] addr_word = addr_in[5:2];
+  wire addr_half = addr_in[1];
+  wire addr_byte = addr_in[0];
 
   always @(posedge clk) begin
     if (!rst_n) begin
-      addr_counter <= 0;
       for (int i = 0; i < 16; i++) begin
         s[i] <= 32'b0;
       end
     end else if (wr) begin
-      addr_counter <= addr_counter + 1;
       if (addr_half) begin
         if (addr_byte) begin
           s[addr_word][31:24] <= data_in;

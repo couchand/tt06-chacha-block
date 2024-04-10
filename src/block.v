@@ -24,6 +24,7 @@ module block (
   wire summing = !write & (state == STATE_SUM);
 
   reg [7:0] counter;
+  reg [5:0] addr_counter;
 
   wire [4:0] round = counter[7:3];
 
@@ -46,6 +47,7 @@ module block (
     .clk(clk),
     .rst_n(rst_n),
     .wr(write),
+    .addr_in(addr_counter),
     .data_in(data_in),
     .qr_sel(quarter_round_sel),
     .a_out(a_base),
@@ -70,6 +72,7 @@ module block (
     .c_out(c_rd),
     .d_out(d_rd),
     .read(read),
+    .addr_in(addr_counter),
     .done(done),
     .data_out(data_out)
   );
@@ -90,9 +93,11 @@ module block (
     if (!rst_n) begin
       state <= STATE_READY;
       counter <= 0;
+      addr_counter <= 0;
     end else if (write) begin
       state <= STATE_COPY;
       counter <= 0;
+      addr_counter <= addr_counter + 1;
     end else if (copying) begin
       if (counter + 2 == (1 << 3)) begin
         counter <= 0;
@@ -102,6 +107,7 @@ module block (
       end
     end else if (calculating) begin
       counter <= counter + 1;
+      addr_counter <= 0;
       if ((counter + 1) == (20 << 3)) begin
         counter <= 0;
         state <= STATE_SUM;
@@ -113,7 +119,10 @@ module block (
       end else begin
         counter <= counter + 2;
       end
+    end else if (read) begin
+      addr_counter <= addr_counter + 1;
     end else if (done) begin
+      addr_counter <= 0;
       state <= STATE_INC;
     end
   end
