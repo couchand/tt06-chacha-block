@@ -6,6 +6,7 @@ module chacha_state (
 
   input wire wr_qr,
   input wire round_sel,
+  input wire [1:0] sr_sel,
 
   input wire wr_in,
   input wire wr_add,
@@ -46,6 +47,7 @@ module chacha_state (
   wire [31:0] z_d;
 
   chacha_qr qr_w (
+    .sr_sel(sr_sel),
     .a_in(s[0]),
     .b_in(round_sel ? s[5] : s[4]),
     .c_in(round_sel ? s[10]: s[8]),
@@ -57,6 +59,7 @@ module chacha_state (
   );
 
   chacha_qr qr_x (
+    .sr_sel(sr_sel),
     .a_in(s[1]),
     .b_in(round_sel ? s[6] : s[5]),
     .c_in(round_sel ? s[11]: s[9]),
@@ -68,6 +71,7 @@ module chacha_state (
   );
 
   chacha_qr qr_y (
+    .sr_sel(sr_sel),
     .a_in(s[2]),
     .b_in(round_sel ? s[7] : s[6]),
     .c_in(round_sel ? s[8]: s[10]),
@@ -79,6 +83,7 @@ module chacha_state (
   );
 
   chacha_qr qr_z (
+    .sr_sel(sr_sel),
     .a_in(s[3]),
     .b_in(round_sel ? s[4] : s[7]),
     .c_in(round_sel ? s[9]: s[11]),
