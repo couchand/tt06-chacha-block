@@ -7,41 +7,29 @@ module chacha_base (
   input wire wr,
   input wire [7:0] data_in,
 
-  output wire [31:0] s0,
-  output wire [31:0] s1,
-  output wire [31:0] s2,
-  output wire [31:0] s3,
-  output wire [31:0] s4,
-  output wire [31:0] s5,
-  output wire [31:0] s6,
-  output wire [31:0] s7,
-  output wire [31:0] s8,
-  output wire [31:0] s9,
-  output wire [31:0] s10,
-  output wire [31:0] s11,
-  output wire [31:0] s12,
-  output wire [31:0] s13,
-  output wire [31:0] s14,
-  output wire [31:0] s15
+  input wire [1:0] qr_sel,
+  output wire [31:0] a_out,
+  output wire [31:0] b_out,
+  output wire [31:0] c_out,
+  output wire [31:0] d_out
 );
   reg [31:0] s[15:0];
 
-  assign s0 = s[0];
-  assign s1 = s[1];
-  assign s2 = s[2];
-  assign s3 = s[3];
-  assign s4 = s[4];
-  assign s5 = s[5];
-  assign s6 = s[6];
-  assign s7 = s[7];
-  assign s8 = s[8];
-  assign s9 = s[9];
-  assign s10 = s[10];
-  assign s11 = s[11];
-  assign s12 = s[12];
-  assign s13 = s[13];
-  assign s14 = s[14];
-  assign s15 = s[15];
+  assign a_out = qr_sel[1]
+    ? (qr_sel[0] ? s[3] : s[2])
+    : (qr_sel[0] ? s[1] : s[0]);
+
+  assign b_out = qr_sel[1]
+    ? (qr_sel[0] ? s[7] : s[6])
+    : (qr_sel[0] ? s[5] : s[4]);
+
+  assign c_out = qr_sel[1]
+    ? (qr_sel[0] ? s[11] : s[10])
+    : (qr_sel[0] ? s[9] : s[8]);
+
+  assign d_out = qr_sel[1]
+    ? (qr_sel[0] ? s[15] : s[14])
+    : (qr_sel[0] ? s[13] : s[12]);
 
   reg [5:0] addr_counter;
 

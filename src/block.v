@@ -32,10 +32,14 @@ module block (
   wire eighth_round_sel = counter[0];
 
   wire [31:0] a_rd, b_rd, c_rd, d_rd;
-  wire [31:0] a_wr, b_wr, c_wr, d_wr;
+  wire [31:0] a_qr, b_qr, c_qr, d_qr;
+  wire [31:0] a_base, b_base, c_base, d_base;
+  wire [31:0] a_wr = calculating ? a_qr : a_base;
+  wire [31:0] b_wr = calculating ? b_qr : b_base;
+  wire [31:0] c_wr = calculating ? c_qr : c_base;
+  wire [31:0] d_wr = calculating ? d_qr : d_base;
 
-  wire [31:0] s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15;
-
+  wire state_wr_qr = calculating | copying;
   wire done;
 
   chacha_base block_base (
@@ -43,28 +47,18 @@ module block (
     .rst_n(rst_n),
     .wr(write),
     .data_in(data_in),
-    .s0(s0),
-    .s1(s1),
-    .s2(s2),
-    .s3(s3),
-    .s4(s4),
-    .s5(s5),
-    .s6(s6),
-    .s7(s7),
-    .s8(s8),
-    .s9(s9),
-    .s10(s10),
-    .s11(s11),
-    .s12(s12),
-    .s13(s13),
-    .s14(s14),
-    .s15(s15)
+    .qr_sel(quarter_round_sel),
+    .a_out(a_base),
+    .b_out(b_base),
+    .c_out(c_base),
+    .d_out(d_base)
   );
 
   chacha_state block_state (
     .clk(clk),
     .rst_n(rst_n),
-    .wr_qr(calculating),
+    .wr_qr(state_wr_qr),
+    .wr_add(summing),
     .round_sel(round_sel),
     .qr_sel(quarter_round_sel),
     .a_in(a_wr),
@@ -75,24 +69,6 @@ module block (
     .b_out(b_rd),
     .c_out(c_rd),
     .d_out(d_rd),
-    .wr_all(copying),
-    .wr_add(summing),
-    .s0_in(s0),
-    .s1_in(s1),
-    .s2_in(s2),
-    .s3_in(s3),
-    .s4_in(s4),
-    .s5_in(s5),
-    .s6_in(s6),
-    .s7_in(s7),
-    .s8_in(s8),
-    .s9_in(s9),
-    .s10_in(s10),
-    .s11_in(s11),
-    .s12_in(s12),
-    .s13_in(s13),
-    .s14_in(s14),
-    .s15_in(s15),
     .read(read),
     .done(done),
     .data_out(data_out)
@@ -104,10 +80,10 @@ module block (
     .b_in(b_rd),
     .c_in(c_rd),
     .d_in(d_rd),
-    .a_out(a_wr),
-    .b_out(b_wr),
-    .c_out(c_wr),
-    .d_out(d_wr)
+    .a_out(a_qr),
+    .b_out(b_qr),
+    .c_out(c_qr),
+    .d_out(d_qr)
   );
 
   always @(posedge clk) begin
@@ -118,14 +94,25 @@ module block (
       state <= STATE_COPY;
       counter <= 0;
     end else if (copying) begin
-      state <= STATE_CALC;
+      if (counter + 2 == (1 << 3)) begin
+        counter <= 0;
+        state <= STATE_CALC;
+      end else begin
+        counter <= counter + 2;
+      end
     end else if (calculating) begin
       counter <= counter + 1;
       if ((counter + 1) == (20 << 3)) begin
+        counter <= 0;
         state <= STATE_SUM;
       end
     end else if (summing) begin
-      state <= STATE_READY;
+      if (counter + 2 == (1 << 3)) begin
+        counter <= 0;
+        state <= STATE_READY;
+      end else begin
+        counter <= counter + 2;
+      end
     end else if (done) begin
       state <= STATE_INC;
     end
