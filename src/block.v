@@ -23,14 +23,12 @@ module block (
   wire calculating = !write & (state == STATE_CALC);
   wire summing = !write & (state == STATE_SUM);
 
-  reg [7:0] counter;
   reg [5:0] addr_counter;
 
-  wire [4:0] round = counter[7:3];
-
+  reg [4:0] round;
   wire round_sel = round[0];
-  wire [1:0] quarter_round_sel = counter[2:1];
-  wire eighth_round_sel = counter[0];
+
+  reg [1:0] quarter_round_sel;
 
   wire [31:0] a_rd, b_rd, c_rd, d_rd;
   wire [31:0] a_qr, b_qr, c_qr, d_qr;
@@ -40,7 +38,6 @@ module block (
   wire [31:0] c_wr = calculating ? c_qr : c_base;
   wire [31:0] d_wr = calculating ? d_qr : d_base;
 
-  wire state_wr_qr = calculating | copying;
   wire done;
 
   chacha_base block_base (
@@ -59,65 +56,48 @@ module block (
   chacha_state block_state (
     .clk(clk),
     .rst_n(rst_n),
-    .wr_qr(state_wr_qr),
-    .wr_add(summing),
+    .wr_qr(calculating),
     .round_sel(round_sel),
+    .wr_in(copying),
+    .wr_add(summing),
     .qr_sel(quarter_round_sel),
-    .a_in(a_wr),
-    .b_in(b_wr),
-    .c_in(c_wr),
-    .d_in(d_wr),
-    .a_out(a_rd),
-    .b_out(b_rd),
-    .c_out(c_rd),
-    .d_out(d_rd),
+    .a_in(a_base),
+    .b_in(b_base),
+    .c_in(c_base),
+    .d_in(d_base),
     .read(read),
     .addr_in(addr_counter),
     .done(done),
     .data_out(data_out)
   );
 
-  chacha_qr block_qr (
-    .sel(eighth_round_sel),
-    .a_in(a_rd),
-    .b_in(b_rd),
-    .c_in(c_rd),
-    .d_in(d_rd),
-    .a_out(a_qr),
-    .b_out(b_qr),
-    .c_out(c_qr),
-    .d_out(d_qr)
-  );
-
   always @(posedge clk) begin
     if (!rst_n) begin
       state <= STATE_READY;
-      counter <= 0;
       addr_counter <= 0;
+      round <= 0;
+      quarter_round_sel <= 0;
     end else if (write) begin
       state <= STATE_COPY;
-      counter <= 0;
+      round <= 0;
+      quarter_round_sel <= 0;
       addr_counter <= addr_counter + 1;
     end else if (copying) begin
-      if (counter + 2 == (1 << 3)) begin
-        counter <= 0;
+      quarter_round_sel <= quarter_round_sel + 1;
+      if (quarter_round_sel + 2'b1 == 2'b0) begin
         state <= STATE_CALC;
-      end else begin
-        counter <= counter + 2;
       end
     end else if (calculating) begin
-      counter <= counter + 1;
       addr_counter <= 0;
-      if ((counter + 1) == (20 << 3)) begin
-        counter <= 0;
+      round <= round + 1;
+      if (round + 5'b1 == 5'd20) begin
+        round <= 0;
         state <= STATE_SUM;
       end
     end else if (summing) begin
-      if (counter + 2 == (1 << 3)) begin
-        counter <= 0;
+      quarter_round_sel <= quarter_round_sel + 1;
+      if (quarter_round_sel + 2'b1 == 2'b0) begin
         state <= STATE_READY;
-      end else begin
-        counter <= counter + 2;
       end
     end else if (read) begin
       addr_counter <= addr_counter + 1;
