@@ -30,13 +30,7 @@ module block (
 
   reg [1:0] quarter_round_sel;
 
-  wire [31:0] a_rd, b_rd, c_rd, d_rd;
-  wire [31:0] a_qr, b_qr, c_qr, d_qr;
   wire [31:0] a_base, b_base, c_base, d_base;
-  wire [31:0] a_wr = calculating ? a_qr : a_base;
-  wire [31:0] b_wr = calculating ? b_qr : b_base;
-  wire [31:0] c_wr = calculating ? c_qr : c_base;
-  wire [31:0] d_wr = calculating ? d_qr : d_base;
 
   wire done;
 
