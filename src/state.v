@@ -9,11 +9,8 @@ module chacha_state (
 
   input wire wr_in,
   input wire wr_add,
-  input wire [1:0] qr_sel,
-  input wire [31:0] a_in,
-  input wire [31:0] b_in,
-  input wire [31:0] c_in,
-  input wire [31:0] d_in,
+  input wire [3:0] word_sel,
+  input wire [31:0] data_in,
 
   input wire read,
   input wire [5:0] addr_in,
@@ -150,32 +147,10 @@ module chacha_state (
       for (int i = 0; i < 16; i++) begin
         s[i] <= 32'b0;
       end
-    end else if (wr_in | wr_add) begin
-      if (!qr_sel[1]) begin
-        if (!qr_sel[0]) begin
-          s[0] <= a_in + (wr_add ? s[0] : 0);
-          s[4] <= b_in + (wr_add ? s[4] : 0);
-          s[8] <= c_in + (wr_add ? s[8] : 0);
-          s[12] <= d_in + (wr_add ? s[12] : 0);
-        end else begin
-          s[1] <= a_in + (wr_add ? s[1] : 0);
-          s[5] <= b_in + (wr_add ? s[5] : 0);
-          s[9] <= c_in + (wr_add ? s[9] : 0);
-          s[13] <= d_in + (wr_add ? s[13] : 0);
-        end
-      end else begin
-        if (!qr_sel[0]) begin
-          s[2] <= a_in + (wr_add ? s[2] : 0);
-          s[6] <= b_in + (wr_add ? s[6] : 0);
-          s[10] <= c_in + (wr_add ? s[10] : 0);
-          s[14] <= d_in + (wr_add ? s[14] : 0);
-        end else begin
-          s[3] <= a_in + (wr_add ? s[3] : 0);
-          s[7] <= b_in + (wr_add ? s[7] : 0);
-          s[11] <= c_in + (wr_add ? s[11] : 0);
-          s[15] <= d_in + (wr_add ? s[15] : 0);
-        end
-      end
+    end else if (wr_in) begin
+      s[word_sel] <= data_in;
+    end else if (wr_add) begin
+      s[word_sel] <= data_in + s[word_sel];
     end else if (wr_qr) begin
       s[0] <= w_a;
       s[1] <= x_a;

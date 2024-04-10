@@ -28,9 +28,8 @@ module block (
   reg [4:0] round;
   wire round_sel = round[0];
 
-  reg [1:0] quarter_round_sel;
-
-  wire [31:0] a_base, b_base, c_base, d_base;
+  reg [3:0] word_sel;
+  wire [31:0] word_txfr;
 
   wire done;
 
@@ -40,11 +39,8 @@ module block (
     .wr(write),
     .addr_in(addr_counter),
     .data_in(data_in),
-    .qr_sel(quarter_round_sel),
-    .a_out(a_base),
-    .b_out(b_base),
-    .c_out(c_base),
-    .d_out(d_base)
+    .word_sel(word_sel),
+    .data_out(word_txfr)
   );
 
   chacha_state block_state (
@@ -54,11 +50,8 @@ module block (
     .round_sel(round_sel),
     .wr_in(copying),
     .wr_add(summing),
-    .qr_sel(quarter_round_sel),
-    .a_in(a_base),
-    .b_in(b_base),
-    .c_in(c_base),
-    .d_in(d_base),
+    .word_sel(word_sel),
+    .data_in(word_txfr),
     .read(read),
     .addr_in(addr_counter),
     .done(done),
@@ -70,15 +63,15 @@ module block (
       state <= STATE_READY;
       addr_counter <= 0;
       round <= 0;
-      quarter_round_sel <= 0;
+      word_sel <= 0;
     end else if (write) begin
       state <= STATE_COPY;
       round <= 0;
-      quarter_round_sel <= 0;
+      word_sel <= 0;
       addr_counter <= addr_counter + 1;
     end else if (copying) begin
-      quarter_round_sel <= quarter_round_sel + 1;
-      if (quarter_round_sel + 2'b1 == 2'b0) begin
+      word_sel <= word_sel + 1;
+      if (word_sel + 4'b1 == 4'b0) begin
         state <= STATE_CALC;
       end
     end else if (calculating) begin
@@ -89,8 +82,8 @@ module block (
         state <= STATE_SUM;
       end
     end else if (summing) begin
-      quarter_round_sel <= quarter_round_sel + 1;
-      if (quarter_round_sel + 2'b1 == 2'b0) begin
+      word_sel <= word_sel + 1;
+      if (word_sel + 4'b1 == 4'b0) begin
         state <= STATE_READY;
       end
     end else if (read) begin
